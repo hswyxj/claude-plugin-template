@@ -40,6 +40,8 @@
 - 确保每个 skill 聚焦单一功能
 - 添加必要的使用示例
 - 更新 README 中的相关文档
+- Hook 脚本使用 POSIX shell 语法，兼容 Git Bash / WSL / macOS / Linux
+- Hook 脚本通过 `${CLAUDE_PLUGIN_ROOT}` 获取插件根目录，禁止硬编码绝对路径
 
 ## 📝 添加新 Skill
 
@@ -57,10 +59,11 @@
 ---
 name: your-skill-name
 description: 简短描述这个 skill 的功能
-allowed-tools: Read, Grep, Glob, Write
+allowed-tools: Read, Grep, Glob, Write, Bash
 scope:
   paths:
     - "**/*.{ts,tsx,js,jsx}"
+    - "!**/*.test.ts"
 ---
 
 # Skill 标题
@@ -81,6 +84,39 @@ scope:
 
 预期的输出格式说明...
 ```
+
+### Skill 开发要点
+
+- **`allowed-tools`**：只声明 skill 实际需要的工具，遵循最小权限原则
+- **`scope.paths`**：设置路径作用域，避免 skill 在不相关的文件上触发
+- **单一职责**：每个 skill 只解决一个问题，复杂流程拆成多个 skill
+- **幂等性**：同一输入多次执行，结果应一致
+- **可测试**：提供明确的测试用例，方便验证 skill 是否正常工作
+
+## 🔧 添加新 Hook
+
+如果你想添加新的 hook：
+
+1. 在 `hooks/scripts/` 下创建新的 shell 脚本
+2. 在 `hooks/hooks.json` 中注册 hook，指定触发时机
+3. 脚本通过 `${CLAUDE_PLUGIN_ROOT}` 获取插件根目录
+4. 脚本需有执行权限：`chmod +x hooks/scripts/xxx.sh`
+
+### Hook 类型
+
+| 类型 | 触发时机 | 典型用途 |
+|------|----------|----------|
+| `Stop` | 会话结束时 | 更新文档、同步状态 |
+| `PreToolUse` | 工具调用前 | 安全拦截、参数校验 |
+| `PostToolUse` | 工具调用后 | 日志记录、结果处理 |
+| `PreCommit` | 提交前 | 代码质量检查、格式化 |
+
+### Hook 开发要点
+
+- **POSIX 兼容**：使用 POSIX shell 语法，不依赖 bash 特性
+- **退出码规范**：`0` 表示通过，非 `0` 表示拦截/失败
+- **环境变量**：通过 `CLAUDE_TOOL_NAME`、`CLAUDE_TOOL_ARGS` 等获取上下文
+- **错误信息**：拦截时输出清晰的错误提示，说明原因和建议
 
 ## ❓ 有疑问？
 
