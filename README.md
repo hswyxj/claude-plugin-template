@@ -1,9 +1,12 @@
-# Claude Code 通用 Skills 插件模板 ()
+# Claude Code 通用 Skills 插件模板 - 团队版
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
 
 一套开箱即用的 Claude Code 插件，包含 9 个通用 skills，覆盖代码开发全流程。
+
+- 把一套能跑通的配置变成可安装、可版本管理、可分发的单元。相当于把你的.claude/打包成了一个"团队版"，别人一条命令就能装上。
+
 
 ## 📦 包含的 Skills
 
@@ -40,6 +43,53 @@ cp -r claude-plugin-template /path/to/your/project/.claude/plugins/team-toolkit
 # 或者作为 Git 子模块
 git submodule add <repo-url> .claude/plugins/team-toolkit
 ```
+
+## 安装
+
+### 方式一：从市场安装（推荐）
+
+```bash
+# 添加市场
+/plugin marketplace add https://github.com/hswyxj/claude-plugin-template
+
+# 安装插件
+/plugin install team-toolkit@team-plugins
+```
+
+### 方式二：本地测试
+
+```bash
+# 在插件目录下启动 Claude Code
+claude --plugin-dir .
+```
+
+### 方式三：复制到项目
+
+```bash
+# 复制到项目的 .claude/plugins/ 目录
+cp -r /path/to/team-toolkit /path/to/project/.claude/plugins/team-toolkit
+```
+
+## Hooks
+
+本插件包含 3 个 hooks：
+
+### Stop Hook - 自动更新 CLAUDE.md
+
+会话结束时自动检查并更新 CLAUDE.md 中的日期，保持文档最新。
+
+### Pre-commit Hook - 代码质量检查
+
+提交前检查：
+- 未处理的 `console.log`
+- `TODO`/`FIXME` 注释（仅警告）
+- 敏感信息硬编码
+
+### Pre-tool Hook - 安全拦截
+
+对高风险操作（如 `rm -rf`、修改系统文件）进行拦截，防止误操作。
+
+> **注意：** Hook 脚本需要 POSIX shell（Git Bash / WSL / macOS / Linux）。
 
 ## 📁 目录结构
 

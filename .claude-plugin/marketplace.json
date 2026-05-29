@@ -1,0 +1,15 @@
+{
+  "name": "team-plugins",
+  "owner": {
+    "name": "<your-team-name>",
+    "url": "https://github.com/hswyxj"
+  },
+  "plugins": [
+    {
+      "name": "team-toolkit",
+      "source": "github",
+      "repo": "hswyxj/claude-plugin-template",
+      "description": "团队通用 Claude Code Skills：代码审查、调试修复、重构优化、文档生成、工作流"
+    }
+  ]
+}

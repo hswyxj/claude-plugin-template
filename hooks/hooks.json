@@ -1,0 +1,19 @@
+{
+  "hooks": [
+    {
+      "type": "stop",
+      "description": "会话结束时自动更新 CLAUDE.md",
+      "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/scripts/update-claude-md.sh"
+    },
+    {
+      "type": "pre-commit",
+      "description": "提交前检查代码质量",
+      "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/scripts/pre-commit-check.sh"
+    },
+    {
+      "type": "pre-tool",
+      "description": "高风险操作安全拦截",
+      "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/scripts/safety-check.sh"
+    }
+  ]
+}

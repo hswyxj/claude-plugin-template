@@ -127,3 +127,14 @@ describe('calculateTotal', () => {
   });
 });
 ```
+
+## 测试覆盖率分析
+
+### 覆盖率缺口检测
+- 检查项目是否有 jest.config / vitest.config
+- 运行 `npx jest --coverage` 或 `npx vitest --coverage` 获取覆盖率报告
+- 识别覆盖率 < 80% 的文件，优先生成这些文件的测试
+
+### 测试模式学习
+- 分析现有测试文件的模式（setup、mock、assertion 风格）
+- 新生成的测试遵循项目已有模式
