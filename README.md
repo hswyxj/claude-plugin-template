@@ -91,24 +91,26 @@ claude --plugin-dir .
 cp -r /path/to/team-toolkit /path/to/project/.claude/plugins/team-toolkit
 ```
 
-## Hooks
+## 🪝 Hooks
 
-本插件包含 3 个 hooks：
+本插件包含 3 个 hooks，提供自动化保障：
 
-### Stop Hook - 自动更新 CLAUDE.md
+| Hook | 脚本 | 触发时机 | 功能 |
+|------|------|----------|------|
+| Stop Hook | `update-claude-md.sh` | 会话结束时 | 自动更新 CLAUDE.md 中的日期 |
+| Pre-commit Hook | `pre-commit-check.sh` | 提交前 | 检查 console.log / TODO / 敏感信息硬编码 |
+| Pre-tool Hook | `safety-check.sh` | 工具调用前 | 拦截 rm -rf、系统文件修改等高风险操作 |
 
-会话结束时自动检查并更新 CLAUDE.md 中的日期，保持文档最新。
+### Hook 脚本位置
 
-### Pre-commit Hook - 代码质量检查
-
-提交前检查：
-- 未处理的 `console.log`
-- `TODO`/`FIXME` 注释（仅警告）
-- 敏感信息硬编码
-
-### Pre-tool Hook - 安全拦截
-
-对高风险操作（如 `rm -rf`、修改系统文件）进行拦截，防止误操作。
+```
+hooks/
+├── hooks.json                       # Hook 注册配置
+└── scripts/
+    ├── update-claude-md.sh          # Stop hook
+    ├── pre-commit-check.sh          # Pre-commit hook
+    └── safety-check.sh              # Pre-tool hook
+```
 
 > **注意：** Hook 脚本需要 POSIX shell（Git Bash / WSL / macOS / Linux）。
 
@@ -117,7 +119,14 @@ cp -r /path/to/team-toolkit /path/to/project/.claude/plugins/team-toolkit
 ```
 team-toolkit/
 ├── .claude-plugin/
-│   └── plugin.json          # 插件配置（必须）
+│   ├── plugin.json          # 插件元数据（必须）
+│   └── marketplace.json     # 市场配置
+├── hooks/
+│   ├── hooks.json           # Hooks 注册配置
+│   └── scripts/
+│       ├── update-claude-md.sh    # Stop hook：自动更新 CLAUDE.md
+│       ├── pre-commit-check.sh    # Pre-commit：代码质量检查
+│       └── safety-check.sh        # Pre-tool：安全拦截
 ├── skills/
 │   ├── code-review/
 │   │   └── SKILL.md
@@ -137,7 +146,10 @@ team-toolkit/
 │   │   └── SKILL.md
 │   └── type-safety/
 │       └── SKILL.md
-└── README.md
+├── README.md
+├── CHANGELOG.md
+├── CONTRIBUTING.md
+└── LICENSE
 ```
 
 ## ⚙️ 自定义配置
@@ -216,7 +228,7 @@ scope:
 ## 🐛 常见问题
 
 **Q: 为什么 skill 没有生效？**
-A: 检查是否把组件放错了位置。只有 `plugin.json` 在 `.claude-plugin/` 目录，其他都在插件根目录。
+A: 检查是否把组件放错了位置。`plugin.json` 和 `marketplace.json` 在 `.claude-plugin/` 目录，skills 在 `skills/` 目录，hooks 在 `hooks/` 目录。
 
 **Q: 如何更新已安装的插件？**
 A: 在市场中更新版本号或 commit SHA，用户下次启动会自动更新。

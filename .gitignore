@@ -41,4 +41,4 @@ pnpm-lock.yaml
 
 # Claude Code
 .claude/
-docs
+docs/
